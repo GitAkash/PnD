@@ -1,0 +1,112 @@
+Opgave 1
+	A) 
+	Mean:
+		A:211.9g
+		B:220.4g
+	Standard Deviation
+		A: 10.98g
+		B: 2.750g
+
+	B)
+	Persoon A, meer accuraat. persoon B meer precies. Bij B ligt de spreiding van de resultaten dichter bij elkaar.
+
+
+Opgave 2
+	A)
+	Water in een 20 graden omgeving.
+	Meet de temperatuur van water en verifeer of het water daadwerkelijk 20 graden is.
+	Weeg de meetbeker & noteer gewicht.	
+	Stop water in de meetbeker & noteer nieuwe gewicht.
+	Nieuwe gewicht - gewicht beker = gewicht water
+	Gebruik de formule p=m/v
+		Deel massa van het water door de hoeveelheid water dat in de beker past.
+	Nu hebben we dichtheid van water.
+
+	Fouten:
+		Willekeurig:
+			Aflezen van temperatuur. (Streepjes zijn niet precies af te lezen)
+			Hoeveel water exact in de beker terecht komt bij het vullen. (De meetbeker streepjes zul je niet exact goed kunnen aflezen)
+
+		Systematisch:
+			Fout in de weegschaal (Weegschaal kan fouten bevatten in zijn werking en daardoor standaard afwijken)
+			Fout in thermometer (Thermometer kan fouten bevatten in zijn werking en daardoor standaard afwijken)
+			Fout in Meetbeker (Meetbeker kan fouten bevatten in zijn werking en daardoor standaard afwijken)
+	
+
+Opgave 3
+	A) 
+	Ik lees de hoeveelheid op 2.80 en 2.76
+			2.76+2.80 = 5.56
+			5.56/2=2.78
+			2.80-2.78=0.02
+	Fout marge is dus +- 0.02
+
+	B)
+	Parallax effect is dat de voorgrond los lijkt te bewegen van de achtergrond. Daardoor lees je niet precies waar de pijl heen wijst.
+	Dit zorgt ervoor dat je precisie verminderd wordt bij het aflezen van het juiste aantal voltage.
+
+
+Opgave 4
+	A)
+	2.8534 * 0.002 = 0.0057 mA
+	0.0057 + 0.0010 = 0.0067 mA
+
+	B)
+	1.3531 * 0.002 = 0.0027 V
+	0.0027 + 0.0010 = 0.0037 V 
+
+
+Opgave 5
+	A)
+	De minimum temperatuur kan 22.5 °C zijn, de maximum 23.4999 (23.5) °C
+	Er wordt namelijk afgerond waardoor we niet zeker kunnen zijn tussen deze temperaturen.
+
+	B) Minimum temperatuur is 22.5 °C, maximum temperatuur is 25.4999 (25.5)°C tussen de twee thermometers.
+	   Het bereik is dan tussen 22.5 °C en 25.5 °C.
+
+
+ Opgave 6
+	A)
+	Een leesfout gebeurt wanneer een persoon niet bij het juiste streepje zijn meting afleest. Je maakt dan dus een fout in het
+	aflezen van de streepjes. Ik schat dat je de meting 1mm nauwkeurig kan meten. Er zitten vaak fouten in een geodriehoek met de exacte afstanden
+	tussen de milimiter strepen. waardoor uiteindelijk op 14cm wel een onnauwkeurigheid van een mm bestaat. Bovendien kan je niet exact op de milimimeter aflezen.
+
+	B)
+	800/14 = 57.14, je moet dus 58 keer meten, met een marge van een milimeter wordt de error 58 * 1 = 58mm
+	Er is dus een foutmarge van +- 58mm
+
+	C)
+	De foutmarge is de maximale fout richting een positie. Na elke meting kan het zijn dat ik iets te weinig meet of iets te veel meet, dit middeld uit tot een getal lager dan 58mm
+	in marge. De kans dat je elke meer 1mm te veel pakt is namelijk niet heel realistisch als je 58 keer moet meten.
+
+
+Opgave 7
+	A)
+	g = 9.8 ± 0.2 m/s^2
+
+	B)	
+	v = (13.5±0.2) × 10^(2) km/u
+
+	C)
+	F = 23.96 ± 0.12 N
+
+
+Opgave 8
+	(0.4)/(2.5N) = 0.001
+	N=(0.4)/(2.5*0.001)
+	N=160
+	Dus de slinger moet 160 periodes ondergaan om de juiste precisie te krijgen.
+
+Opgave 9
+	A)
+	Student A: External -> Maar 1x meten en dan al vaststellen wat de foutmarge ongeveer is.
+	Student B: Internal -> Meerdere metingen en foutmarge berekenen
+	Student C: External -> Maar 1x meten en heeft van te voren al de foutmarge gelezen in de handleiding, in plaats van het berekenen van de foutmarge.
+		            -> (Of internal, als de foutmarge dus al gemeten is door de fabrikant en we deze marge moeten gebruiken)
+
+	B)
+	Student C heeft een betere meting gedaan dan A, student A doet immers een beetje marge gokken
+	vanuit het oog terwijl student C een van te voren berekend marge van het bedrijf heeft gekregen.
+	Student C heeft een slechtere meting gedaan dan B, want student B heeft een kleinere foutmarge en deze marge nauwkeurig berekend.
+	
+	
