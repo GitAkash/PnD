@@ -13,11 +13,11 @@ cellVelocities = np.zeros((1, 2), dtype='float64')[1:]
 # cellRadius = np.zeros((1, 1), dtype='float64')[1:]
 
 cellMass = 3
-cellRadius = 5
+cellRadius = 10
 
 for i in range(quantityCells):
-    cellCoordinates = np.vstack((cellCoordinates, [random.randint(-30, 30), random.randint(-30, 30)]))
-    cellVelocities = np.vstack((cellVelocities, [random.randint(-10, 10), random.randint(-10, 10)]))
+    cellCoordinates = np.vstack((cellCoordinates, [random.randint(-40, 40), random.randint(-40, 40)]))
+    cellVelocities = np.vstack((cellVelocities, [random.randint(-20, 20), random.randint(-20, 20)]))
     # cellMass = np.vstack((cellMass, random.randint(1, 10)))
     # cellRadius = np.vstack((cellRadius, random.randint(5, 10)))
 print(
@@ -28,21 +28,29 @@ print(
 matplotlib.use("QT5Agg")
 fig, box = plt.subplots()
 ms = 2 * cellRadius * fig.gca().get_window_extent().height / boxSize * 72. / fig.dpi
-line, = box.plot(cellCoordinates[:, 0], cellCoordinates[:, 1], marker='o', ms=ms, mfc='none', linestyle='None')
+line, = box.plot(cellCoordinates[:, 0], cellCoordinates[:, 1], marker='o', ms=ms, mfc='none', linestyle='None', c='pink')
 plt.xlim(-50, 50)
 plt.ylim(-50, 50)
+plt.tick_params(left=False, right=False, labelleft=False, labelbottom=False, bottom=False)
 fig.gca().set_aspect('equal', 'box')
+box.set_facecolor('grey')
+plt.tight_layout()
 
-
+'''
+Cell also collides with walls, because it's 2D it's easy to calculate the angle the cells has to colide with.
+'''
 def wallCollisions():
     horizontalWall = ((cellCoordinates[:, 0] < -(boxSize / 2 - cellRadius / 2)) |
-            (cellCoordinates[:, 0] > boxSize / 2 - cellRadius / 2))
+                      (cellCoordinates[:, 0] > boxSize / 2 - cellRadius / 2))
     verticalWall = ((cellCoordinates[:, 1] < -(boxSize / 2 - cellRadius / 2)) |
-            (cellCoordinates[:, 1] > boxSize / 2 - cellRadius / 2))
+                    (cellCoordinates[:, 1] > boxSize / 2 - cellRadius / 2))
     cellVelocities[:, 1][verticalWall] *= -1
     cellVelocities[:, 0][horizontalWall] *= -1
 
-
+'''
+Cells also collide with each other, check if the cell radii are in range of each other,
+if they are the cells collide and a collision will be performed.
+'''
 def cellCollisions():
     for cell1Coords, cell1Velocity, in zip(cellCoordinates, cellVelocities):
         for cell2Coords, cell2Velocity, in zip(cellCoordinates[1:], cellVelocities[1:]):
@@ -51,15 +59,20 @@ def cellCollisions():
             dx = xCell1 - xCell2
             dy = yCell1 - yCell2
 
-            if np.sqrt(dx ** 2 + dy ** 2) <= cellRadius and np.dot((cell1Coords - cell2Coords), (cell1Velocity - cell2Velocity)) < 0:
+            if np.sqrt(dx ** 2 + dy ** 2) <= cellRadius and np.dot((cell1Coords - cell2Coords),
+                                                                   (cell1Velocity - cell2Velocity)) < 0:
                 d = np.linalg.norm(cell1Coords - cell2Coords) ** 2
                 cell2VelocityOld = cell2Velocity
                 cell1VelocityOld = cell1Velocity
-                cell1Velocity -= np.dot((cell1VelocityOld - cell2VelocityOld), (cell1Coords - cell2Coords)) / d * (cell1Coords - cell2Coords)
-                cell2Velocity -= np.dot((cell2VelocityOld - cell1VelocityOld), (cell2Coords - cell1Coords)) / d * (cell2Coords - cell1Coords)
+                cell1Velocity -= np.dot((cell1VelocityOld - cell2VelocityOld), (cell1Coords - cell2Coords)) / d * (
+                            cell1Coords - cell2Coords)
+                cell2Velocity -= np.dot((cell2VelocityOld - cell1VelocityOld), (cell2Coords - cell1Coords)) / d * (
+                            cell2Coords - cell1Coords)
+
 
 def energy():
-    return print(0.5*cellMass*np.average(cellVelocities)**2)
+    return print(0.5 * cellMass * np.average(cellVelocities) ** 2)
+
 
 def update(i):
     cellCoordinates[:] += 0.05 * cellVelocities[:]
