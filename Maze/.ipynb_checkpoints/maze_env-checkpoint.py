@@ -5,7 +5,7 @@ j.s.kanger Oct 2023
 
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib; matplotlib.use("QT5Agg")
+import matplotlib; matplotlib.use("TkAgg")
 
 """
 Module for creating and plotting a maze.

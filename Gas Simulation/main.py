@@ -12,8 +12,8 @@ cellVelocities = np.zeros((1, 2), dtype='float64')[1:]
 # cellMass = np.zeros((1, 1), dtype='float64')[1:]
 # cellRadius = np.zeros((1, 1), dtype='float64')[1:]
 
-cellMass = 3
-cellRadius = 10
+cellMass = 1
+cellRadius = 5
 
 for i in range(quantityCells):
     cellCoordinates = np.vstack((cellCoordinates, [random.randint(-40, 40), random.randint(-40, 40)]))
@@ -32,12 +32,11 @@ line, = box.plot(cellCoordinates[:, 0], cellCoordinates[:, 1], marker='o', ms=ms
 plt.xlim(-50, 50)
 plt.ylim(-50, 50)
 plt.tick_params(left=False, right=False, labelleft=False, labelbottom=False, bottom=False)
-fig.gca().set_aspect('equal', 'box')
 box.set_facecolor('grey')
 plt.tight_layout()
 
 '''
-Cell also collides with walls, because it's 2D it's easy to calculate the angle the cells has to colide with.
+Cell also collides with walls, because it's 2D it's easy to calculate the angle the cells has to collide with.
 '''
 def wallCollisions():
     horizontalWall = ((cellCoordinates[:, 0] < -(boxSize / 2 - cellRadius / 2)) |
@@ -59,28 +58,27 @@ def cellCollisions():
             dx = xCell1 - xCell2
             dy = yCell1 - yCell2
 
-            if np.sqrt(dx ** 2 + dy ** 2) <= cellRadius and np.dot((cell1Coords - cell2Coords),
+            if np.sqrt(dx ** 2 + dy ** 2) <= 0.8*cellRadius and np.dot((cell1Coords - cell2Coords),
                                                                    (cell1Velocity - cell2Velocity)) < 0:
                 d = np.linalg.norm(cell1Coords - cell2Coords) ** 2
                 cell2VelocityOld = cell2Velocity
                 cell1VelocityOld = cell1Velocity
-                cell1Velocity -= np.dot((cell1VelocityOld - cell2VelocityOld), (cell1Coords - cell2Coords)) / d * (
+                dv = np.dot((cell1VelocityOld - cell2VelocityOld), (cell1Coords - cell2Coords)) / d * (
                             cell1Coords - cell2Coords)
-                cell2Velocity -= np.dot((cell2VelocityOld - cell1VelocityOld), (cell2Coords - cell1Coords)) / d * (
-                            cell2Coords - cell1Coords)
-
-
+                cell1Velocity -= dv
+                cell2Velocity += dv
+                # cell2Velocity *= -cell1Velocity
 def energy():
-    return print(0.5 * cellMass * np.average(cellVelocities) ** 2)
-
+    print(0.5 * cellMass * (cellVelocities[:, 0]**2 + cellVelocities[:, 1]**2))
 
 def update(i):
-    cellCoordinates[:] += 0.05 * cellVelocities[:]
+    cellCoordinates[:] += 0.1 * cellVelocities[:]
     cellCollisions()
     wallCollisions()
+    # energy()
     line.set_data(cellCoordinates[:, 0], cellCoordinates[:, 1])
     return line,
 
 
-ani = animation.FuncAnimation(fig, update, frames=2000, repeat=False, interval=30, blit=True)
+ani = animation.FuncAnimation(fig, update, frames=2000, repeat=False, interval=10, blit=True)
 plt.show()
