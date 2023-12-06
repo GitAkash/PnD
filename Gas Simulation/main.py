@@ -6,11 +6,9 @@ import random
 
 quantityCells = int(input("Cell Quantity: "))
 boxSize = 100
-# cellRadius = int(input("Cell Radius: "))
 cellCoordinates = np.zeros((1, 2), dtype='float64')[1:]
 cellVelocities = np.zeros((1, 2), dtype='float64')[1:]
-# cellMass = np.zeros((1, 1), dtype='float64')[1:]
-# cellRadius = np.zeros((1, 1), dtype='float64')[1:]
+
 
 cellMass = 1
 cellRadius = 5
@@ -18,8 +16,7 @@ cellRadius = 5
 for i in range(quantityCells):
     cellCoordinates = np.vstack((cellCoordinates, [random.randint(-40, 40), random.randint(-40, 40)]))
     cellVelocities = np.vstack((cellVelocities, [random.randint(-8, 8), random.randint(-8, 8)]))
-    # cellMass = np.vstack((cellMass, random.randint(1, 10)))
-    # cellRadius = np.vstack((cellRadius, random.randint(5, 10)))
+
 print(
     f"Coordinates: \n {cellCoordinates} \n Velocity: \n {cellVelocities} \n Radius: \n {cellRadius} \n Mass: \n {cellMass}",
     end='')
@@ -67,7 +64,6 @@ def cellCollisions():
                             cell1Coords - cell2Coords)
                 cell1Velocity -= dv
                 cell2Velocity += dv
-                # cell2Velocity *= -cell1Velocity
 def energy():
     return np.sum(0.5 * cellMass * (cellVelocities[:, 0]**2 + cellVelocities[:, 1]**2)) /  quantityCells
 
