@@ -3,38 +3,40 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import matplotlib
 import random
-
+col =[]
 quantityCells = int(input("Cell Quantity: "))
 boxSize = 100
-# cellRadius = int(input("Cell Radius: "))
 cellCoordinates = np.zeros((1, 2), dtype='float64')[1:]
 cellVelocities = np.zeros((1, 2), dtype='float64')[1:]
-# cellMass = np.zeros((1, 1), dtype='float64')[1:]
-# cellRadius = np.zeros((1, 1), dtype='float64')[1:]
 
 cellMass = 1
 cellRadius = 5
 
 for i in range(quantityCells):
-    cellCoordinates = np.vstack((cellCoordinates, [random.randint(-40, 40), random.randint(-40, 40)]))
-    cellVelocities = np.vstack((cellVelocities, [random.randint(-8, 8), random.randint(-8, 8)]))
-    # cellMass = np.vstack((cellMass, random.randint(1, 10)))
-    # cellRadius = np.vstack((cellRadius, random.randint(5, 10)))
-print(
-    f"Coordinates: \n {cellCoordinates} \n Velocity: \n {cellVelocities} \n Radius: \n {cellRadius} \n Mass: \n {cellMass}",
-    end='')
+    cellCoordinates = np.vstack((cellCoordinates, [random.randint(20, 40), random.randint(-40, 40)]))
+    cellVelocities = np.vstack((cellVelocities, [random.randint(-20, 20), random.randint(-20, 20)]))
+
+for i in range(quantityCells):
+    cellCoordinates = np.vstack((cellCoordinates, [random.randint(-40, 20), random.randint(-40, 40)]))
+    cellVelocities = np.vstack((cellVelocities, [random.randint(-20, 20), random.randint(-20, 20)]))
+
 
 ''' Setup the Box '''
 matplotlib.use("QT5Agg")
 fig, box = plt.subplots()
 ms = 2 * cellRadius * fig.gca().get_window_extent().height / boxSize * 72. / fig.dpi
-line, = box.plot(cellCoordinates[:, 0], cellCoordinates[:, 1], marker='o', ms=ms, mfc='none', linestyle='None', c='pink')
 plt.xlim(-50, 50)
 plt.ylim(-50, 50)
 plt.tick_params(left=False, right=False, labelleft=False, labelbottom=False, bottom=False)
 box.set_facecolor('grey')
 plt.tight_layout()
 
+
+line, = box.plot(cellCoordinates[:20, 0], cellCoordinates[:20, 1], marker='o', ms=ms, mfc='none', linestyle='None',
+                      c='blue')
+
+fuck, = box.plot(cellCoordinates[20:, 0], cellCoordinates[20:, 1], marker='o', ms=ms, mfc='none', linestyle='None',
+                      c='red')
 '''
 Cell also collides with walls, because it's 2D it's easy to calculate the angle the cells has to collide with.
 '''
@@ -58,7 +60,7 @@ def cellCollisions():
             dx = xCell1 - xCell2
             dy = yCell1 - yCell2
 
-            if np.sqrt(dx ** 2 + dy ** 2) <= cellRadius and np.dot((cell1Coords - cell2Coords),
+            if np.sqrt(dx ** 2 + dy ** 2) <= 0.8*cellRadius and np.dot((cell1Coords - cell2Coords),
                                                                    (cell1Velocity - cell2Velocity)) < 0:
                 d = np.linalg.norm(cell1Coords - cell2Coords) ** 2
                 cell2VelocityOld = cell2Velocity
@@ -69,18 +71,18 @@ def cellCollisions():
                 cell2Velocity += dv
                 # cell2Velocity *= -cell1Velocity
 def energy():
-    return np.sum(0.5 * cellMass * (cellVelocities[:, 0]**2 + cellVelocities[:, 1]**2)) /  quantityCells
+    print(np.sum(0.5 * cellMass * (cellVelocities[:, 0]**2 + cellVelocities[:, 1]**2)))
 
-
-8.31446261815324
 def update(i):
-    cellCoordinates[:] += 0.1 * cellVelocities[:]
+    cellCoordinates[:] += 0.01 * cellVelocities[:]
     cellCollisions()
     wallCollisions()
-    energy()
-    line.set_data(cellCoordinates[:, 0], cellCoordinates[:, 1])
-    print(cellCoordinates)
-    return line,
+    # energy()
+    line.set_data(cellCoordinates[:20, 0], cellCoordinates[:20, 1])
+    fuck.set_data(cellCoordinates[20:, 0], cellCoordinates[20:, 1])
+
+    return line, fuck,
+
 
 
 ani = animation.FuncAnimation(fig, update, frames=2000, repeat=False, interval=10, blit=True)
