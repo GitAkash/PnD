@@ -5,7 +5,7 @@ import random
 import numpy as np
 
 start_time = time.time()
-env = make(size=41)
+env = make(size=11)
 
 
 def Random(env):
@@ -20,6 +20,7 @@ def Random(env):
         print(loc)
         env.render(path=path)
         matplotlib.pyplot.show(block=False)
+        print(actions)
     return path
 
 env.render(path=Random(env))

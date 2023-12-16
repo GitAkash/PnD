@@ -68,7 +68,6 @@ def energy():
     return np.sum(0.5 * cellMass * (cellVelocities[:, 0]**2 + cellVelocities[:, 1]**2)) /  quantityCells
 
 
-8.31446261815324
 def update(i):
     cellCoordinates[:] += 0.1 * cellVelocities[:]
     cellCollisions()
