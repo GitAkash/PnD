@@ -51,20 +51,17 @@ def times(start, end, step, num_trials):
     size_and_times = []
 
     with ProcessPoolExecutor() as executor:
-        # Use multiple processes to parallelize the timing process
         futures = [executor.submit(time_single, size, num_trials) for size in sizes]
 
         for future in futures:
             size, average_time = future.result()
             size_and_times.append((size, average_time))
 
-    # Write results to CSV
     with open('performance_results.csv', 'w', newline='') as csvfile:
         csv_writer = csv.writer(csvfile)
         csv_writer.writerow(['Size', 'Average Time'])
         csv_writer.writerows(size_and_times)
 
-    # Plot the results
     sizes, average_times = zip(*size_and_times)
 
     plt.plot(sizes, average_times, marker='o')

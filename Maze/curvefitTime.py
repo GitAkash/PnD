@@ -20,21 +20,16 @@ average_times = np.array([0.004068738879577722, 0.016131346960319207, 0.03359872
                           59.81806274120041, 70.29796531225992, 86.60226514534006, 89.91895798436074])
 
 
-# Define the function to fit (you can change this based on the expected behavior)
 def scaling_function(x, a, b):
     return a * x ** b
 
 
-# Perform curve fitting
 params, covariance = curve_fit(scaling_function, sizes, average_times)
 
-# Extract the fitted parameters
 a, b = params
 
-# Generate fitted values for plotting
 fitted_values = scaling_function(sizes, a, b)
 
-# Plot the original data and the fitted curve
 plt.scatter(sizes, average_times, label='Original Data')
 plt.plot(sizes, fitted_values, label=f'Fitted Curve: a={a:.4f}, b={b:.4f}', color='red')
 plt.xlabel('Size')
@@ -42,21 +37,16 @@ plt.ylabel('Average Time (seconds)')
 plt.legend()
 plt.show()
 
-# Print the fitted parameters
 print(f'Fitted Parameters: a={a:.4f}, b={b:.4f}')
 
 
-# Function to calculate estimated time based on fitted parameters
 def calculate_estimated_time(size, a, b):
     return a * size ** b
 
 
-# Fill in your desired size for estimation
-desired_size = 811
+desired_size = 1000000
 
-# Calculate estimated time using the fitted parameters
 estimated_time = calculate_estimated_time(desired_size, a, b)
 
-# Print the result
 print(
     f'Estimated time for size {desired_size}: {estimated_time:.6f} seconds, or {estimated_time / 60:.6f} minutes, or {estimated_time / 3600:.6f} hours')
