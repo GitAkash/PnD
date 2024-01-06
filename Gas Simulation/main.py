@@ -72,7 +72,7 @@ def update(i):
     cellCoordinates[:] += 0.1 * cellVelocities[:]
     cellCollisions()
     wallCollisions()
-    energy()
+    #energy()
     line.set_data(cellCoordinates[:, 0], cellCoordinates[:, 1])
     print(cellCoordinates)
     return line,
