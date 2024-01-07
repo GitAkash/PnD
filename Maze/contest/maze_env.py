@@ -5,7 +5,7 @@ j.s.kanger Oct 2023
 
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib; matplotlib.use("QT5Agg")
+
 
 """
 Module for creating and plotting a maze.
@@ -21,7 +21,12 @@ functions:
         
         Returns the environment
     
-
+Changelog
+# 5-12-2023: 
+    - added a function to MazeEnv class that allows the user to check if the solution is correct
+    - implementation changes to increase speed of the env.action_space() method
+# 12-12-2023:
+    - bug repair in env.action_space to prevent user to delete values from action_space_dict
 """
 
 MARKERS = ('^', '>', 'v', '<')
@@ -42,7 +47,7 @@ def _plot_maze(maze, loc, direction=None, path=None, fig=None, **kwargs):
 
     # creat a new figure with adapted settings
     if fig == None:
-        fig, ax = plt.subplots(**kwargs)
+        fig, ax = plt.subplots(**kwargs)  
         ax = fig.gca()
         plt.cla()
         ax.spines['top'].set_visible(False)
@@ -64,7 +69,7 @@ def _plot_maze(maze, loc, direction=None, path=None, fig=None, **kwargs):
         plt.ylabel('Row number')
         plt.gca().invert_yaxis()  # invert to start at top to get row number right
         ax.plot(loc[1], loc[0], marker=MARKERS[direction])
-
+    
     # plot start location if provided
     if loc is not None:
         # Note x and y are flipped to match row and column of the maze.
@@ -75,7 +80,7 @@ def _plot_maze(maze, loc, direction=None, path=None, fig=None, **kwargs):
     if path is not None:
         # Note x and y are flipped to match row and column of the maze.
         plt.plot(path[:, 1], path[:, 0], 'xkcd:bright blue', linewidth=2)
-
+    
     fig.canvas.draw()
     fig.canvas.flush_events()
     return fig
@@ -108,7 +113,7 @@ def _make_maze(n, seed, perfect=True):
     # initialize parameters
     WALL = True
     rng = np.random.default_rng(seed)
-
+    
     def make_exit(maze):
         """
         Make a hole in the surrounding wall of maze A at random but only where
@@ -121,7 +126,7 @@ def _make_maze(n, seed, perfect=True):
         # keep trying to make exit until matching column/row is found with path
         while not valid:
             side = rng.integers(low=0, high=4)  # pick a side
-            index = rng.integers(low=0, high=N - 1) + 1  # pick an index
+            index = rng.integers(low=0, high=N-1) + 1  # pick an index
             if side == 0:  # left
                 wall = (index, 0)
                 path = (index, 1)
@@ -160,8 +165,8 @@ def _make_maze(n, seed, perfect=True):
 
         # if xdim larger than ydim split vertical and split submazes
         if xdim >= ydim:
-            xsplit = 1 + 2 * rng.integers(low=0, high=int((xdim - 1) / 2))
-            pos = 2 * rng.integers(low=0, high=int((ydim + 1) / 2))
+            xsplit = 1 + 2 * rng.integers(low=0, high=int((xdim - 1)/2))
+            pos = 2 * rng.integers(low=0, high=int((ydim + 1)/2))
             maze[:, xsplit] = True
             maze[pos, xsplit] = False
             split_maze(maze[:, 0:xsplit])
@@ -169,8 +174,8 @@ def _make_maze(n, seed, perfect=True):
 
         # else split horizontal and split submazes
         else:
-            ysplit = 1 + 2 * rng.integers(low=0, high=int((ydim - 1) / 2))
-            pos = 2 * rng.integers(low=0, high=int((xdim + 1) / 2))
+            ysplit = 1 + 2 * rng.integers(low=0, high=int((ydim - 1)/2))
+            pos = 2 * rng.integers(low=0, high=int((xdim + 1)/2))
             maze[ysplit, :] = True
             maze[ysplit, pos] = False
             split_maze(maze[0:ysplit, :])
@@ -181,14 +186,15 @@ def _make_maze(n, seed, perfect=True):
     def delete_walls(maze, epsilon):
         """remove walls at random with a probability of epsilon"""
         ydim, xdim = maze.shape
-
+        
         for r in range(1, ydim - 1):
             for c in range(1, xdim - 1):
-                if (maze[r, c] == WALL) and (maze[r - 1, c] != WALL and maze[r + 1, c] != WALL) or (
-                        maze[r, c - 1] != WALL and maze[r, c + 1] != WALL):
+                if (maze[r, c] == WALL) and (maze[r-1,c] != WALL and maze[r+1,c] != WALL) or (maze[r,c-1] != WALL and maze[r,c+1] != WALL):
                     if rng.uniform() < epsilon:
                         maze[r, c] = not WALL
-
+                        
+        
+    
     # make an empty maze surrounded by walls of dimensions n x n
     maze = np.ones((n, n), dtype=bool)
     maze[1:-1, 1:-1] = np.zeros((n - 2, n - 2), dtype=bool)
@@ -198,23 +204,40 @@ def _make_maze(n, seed, perfect=True):
 
     # determine starting point default is center if this is a wall choose from
     # surrounding cells
-    c = round((n - 1) / 2)  # index of center row and column
+    c = round((n - 1)/2)  # index of center row and column
     if not maze[c, c]:
-        start = (c, c)
+        start = (c, c) 
     else:
-        free_locations = list(zip(*np.where(maze[c - 1:c + 2, c - 1:c + 2] == False)))
-        free_locations = [(loc[0] + c - 1, loc[1] + c - 1) for loc in free_locations]  # correct for offset
+        free_locations = list(zip(*np.where(maze[c - 1:c + 2, c - 1:c + 2]==False)))
+        free_locations = [(loc[0]+c-1, loc[1]+c-1) for loc in free_locations]  # correct for offset
         choice = rng.integers(low=0, high=len(free_locations))
         start = free_locations[choice]
 
     # remove at random some walls to create loops if required
     if not perfect:
         delete_walls(maze, epsilon=0.1)
-
+    
     # create the exits to the maze at random sides
     make_exit(maze)
 
     return maze, np.array(start)
+
+
+def _build_action_space_dict(maze):
+        """
+        returns a dict: 
+        for every gridpoint of the maze, the dict contains a list which contains all directions available to move to.
+        """
+        
+        action_space_dict = {}
+        delta = np.array([[-1,0], [0,1], [1,0], [0,-1]])
+        for i in range(1, maze.shape[0] - 1):
+            for j in range(1, maze.shape[1] - 1): 
+                if not maze[i, j]:
+                    loc = i, j
+                    action_space_dict[loc] = [action for action in range(4) if not maze[tuple(np.array(loc) + delta[action])]]
+
+        return action_space_dict
 
 
 def make(size=15, seed=None, perfect=True):
@@ -224,15 +247,17 @@ def make(size=15, seed=None, perfect=True):
     seed: integer: By setting a value to seed you can reproduce the same maze again 
     perfect: Boolean: If True generates a perfect maze (no loops, one solution).
     """
-
+    
     # intialization
-    _maze, _start_loc = _make_maze(size, seed, perfect)
+    _maze, _start_loc = _make_maze(size, seed, perfect) 
+    _action_space_dict = _build_action_space_dict(_maze)
     _bounds = (0, size - 1)
     _loc = _start_loc
     _action = 0  # facing north
-    _delta = np.array([[-1, 0], [0, 1], [1, 0], [0, -1]])
+    _delta = np.array([[-1,0], [0,1], [1,0], [0,-1]])
     _fig = None
 
+    
     class MazeEnv():
         """
         An environment for navigating a maze.
@@ -245,31 +270,37 @@ def make(size=15, seed=None, perfect=True):
         - step(action): Take a step in the environment with the given action.
         - render(path=None, newfig=False): Render the maze, optionally showing a path.
         - reset(): Reset the environment to its initial state.
+        - check_path(path): Checks if path is a valid solution
 
         """
-
+        
         def __init__(self):
             pass
-
+        
+        
         def _done(self):
             """returns True if the current location is an exit"""
             return _loc[0] in _bounds or _loc[1] in _bounds
-
+        
+        
         def _getindex(self, action):
             """returns the index in maze given the value of action"""
             return _loc + _delta[action]
-
+              
+            
         def _state(self):
             """returns the current gamestate"""
-            return tuple(_loc), self._done()
-
+            return tuple(_loc), self._done() 
+ 
+            
         def action_space(self):
             """
             returns a list of available actions in the current state
             """
-            space = [action for action in range(4) if not _maze[tuple(self._getindex(action))]]
-            return space
-
+            space = _action_space_dict[tuple(_loc)].copy()  
+            return space    
+                
+        
         def step(self, action):
             """
             perform action and return new state
@@ -289,7 +320,8 @@ def make(size=15, seed=None, perfect=True):
             if not _maze[tuple(_new_loc)]:
                 _loc = _new_loc
             return self._state()
-
+            
+        
         def render(self, path=None, newfig=False):
             """
             renders the maze in a matplotlib figure
@@ -301,6 +333,7 @@ def make(size=15, seed=None, perfect=True):
                 _fig = _plot_maze(_maze, _loc, _action)
             _plot_maze(_maze, _loc, _action, path=path, fig=_fig)
             return None
+            
 
         def reset(self):
             """resets the gamestate to the intial position and returns the gamestate"""
@@ -308,5 +341,53 @@ def make(size=15, seed=None, perfect=True):
             _loc = _start_loc
             _action = 0
             return self._state()
+        
+        def check_path(self, path):
+            """ return True if path is a valid path otherwise False """
 
+            # check types and shape of path
+            if type(path) is not np.ndarray:
+                raise Exception('data should have type numpy array')
+                return False
+            
+            if path.ndim != 2:
+                raise Exception('dimension ndarray is not 2')
+            
+            rows, cols = path.shape
+            if cols !=2:
+                raise Exception('number of columns is not 2')
+            
+            # check if first location is the start loc
+            prev_row = path[0]
+            if not np.array_equal(prev_row, _start_loc):
+                raise Exception('start location is wrong')
+                return False
+            
+            # check path
+            for row in path[1:]:
+                
+                # check if it occurs more than once
+                if sum((row == path).prod(axis=1)) != 1:
+                    raise Exception('there are loops in the path')
+                    return False
+
+                # check if location are next to each other
+                if sum(np.abs(prev_row - row)) != 1:
+                    raise Exception('there are gaps in the path')
+                    return False
+                
+                # check if location is not a wall
+                if _maze[tuple(row)]:
+                    raise Exception('path contains walls')
+                    return False
+                    
+                prev_row = row
+
+            # check if last location is the exit
+            if not(row[0] in _bounds or row[1] in _bounds):
+                raise Exception('path does not include the end')
+                return False
+
+            return True
+            
     return MazeEnv()

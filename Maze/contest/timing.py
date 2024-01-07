@@ -1,9 +1,9 @@
 import csv
-from Maze.contest.maze_env import *
-import numpy as np
 import time
+from maze_env import *
 from concurrent.futures import ProcessPoolExecutor
 import matplotlib.pyplot as plt
+import numpy as np
 
 def ask():
     start = int(input("Start Size: "))
@@ -13,11 +13,11 @@ def ask():
 
     if start % 2 == 0:
         start += 1
-        print("Your starting size must be odd.")
+        print("Your starting size must be odd, it got corrected.")
 
     if step % 2 != 0:
         step += 1
-        print("Your step size must be even.")
+        print("Your step size must be even, it got corrected.")
 
     if start <= 5:
         print("Your start size must be larger than 5.")
@@ -71,33 +71,7 @@ def times(start, end, step, num_trials):
     plt.savefig('performance_plot.png')
     plt.show()
 
-def way_out(env):
-    loc, done = env.reset()
-    path = np.array([loc])
-    move = 0
-    while not done:
-        availableActions = np.array(env.action_space())
-        actions = (availableActions - move) % 4
-        if 1 in actions:
-            move = (1 + move) % 4
-        else:
-            if 0 in actions:
-                move = (0 + move) % 4
-            else:
-                move = (3 + move) % 4
-        loc, done = env.step(move)
-        path = np.vstack((loc, path))
-
-    unique_rows, unique_indices, counts = np.unique(path, axis=0, return_index=True, return_counts=True)
-    for i, count in enumerate(counts):
-        if count >= 2:
-            duplicate_indices = np.where(np.all(path == unique_rows[i], axis=1))[0]
-
-            if duplicate_indices.size >= 2:
-                start_index = duplicate_indices[0]
-                end_index = duplicate_indices[-1]
-                path = np.vstack((path[:start_index + 1, :], path[end_index:, :]))
-    return path
+from contestWayOut import way_out
 
 def main():
     inputs = ask()
