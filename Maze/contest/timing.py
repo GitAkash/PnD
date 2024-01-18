@@ -6,30 +6,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 def ask():
-    start = int(input("Start Size: "))
-    end = int(input("End Size: "))
-    step = int(input("Step: "))
-    num_trials = int(input("Number of Trials: "))
-
-    if start % 2 == 0:
-        start += 1
-        print("Your starting size must be odd, it got corrected.")
-
-    if step % 2 != 0:
-        step += 1
-        print("Your step size must be even, it got corrected.")
-
-    if start <= 5:
-        print("Your start size must be larger than 5.")
-        return None
-
-    if end < start:
-        print("The end size must be bigger than the start size.")
-        return None
-
-    if step > end - start:
-        print("Your step can't be bigger than your searching size.")
-        return None
+    start = int(input("Start Size: ") or 11)
+    end = int(input("End Size: ") or 811)
+    step = int(input("Step: ") or 10)
+    num_trials = int(input("Number of Trials: ") or 50)
 
     return start, end, step, num_trials
 

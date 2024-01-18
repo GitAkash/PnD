@@ -3,6 +3,7 @@ import time
 from maze_env import *
 import random
 import numpy as np
+import matplotlib; matplotlib.use('QtAgg')
 
 start_time = time.time()
 env = make(size=11)

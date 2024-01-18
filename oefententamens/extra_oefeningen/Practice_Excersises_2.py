@@ -47,7 +47,7 @@ def find_sequence(test_list, sub_list):
 
 # Opgave 5 - Geometric Mean
 def geomean(n):
-    for i in n:
+    if np.any(n) < 0:
         if i < 0:
             return -1
     return np.prod(n) ** (1 / len(n))
